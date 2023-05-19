@@ -20,33 +20,32 @@ namespace full_stack_Login_Registration
                     return users;
                 }
             });
+            // Delete later^ Just for testing atm.
 
-            app.MapPost("/user", async (User user) =>
+            app.MapPost("/register", async (User user) =>
             {
                 using (var connection = new SqlConnection(connectionString))
                 {
-                    var parameters = new {
+                    var dbOperation = new DbOperation(connection);
+
+                    var usersFromDb = await dbOperation.SelectUserWithId(user.Id);
+
+                    if (usersFromDb != null) return Results.Conflict();
+
+                    var parameters = new
+                    {
                         Id = user.Id,
                         Username = user.Username,
                         Password = user.Password
                     };
-
-                    var parametersTest = new { Id = user.Id };
-                    var sqlTest = "SELECT * FROM [User] WHERE Id = @Id";
-                    var users = await connection.QueryAsync<User>(sqlTest, parametersTest);
-
-                    if (users.Count() != 0)
-                    {
-                        return Results.Conflict();
-                    }
-                    else
-                    {
-                        var sql = "INSERT INTO [User] VALUES (@Id, @Username, @Password)";
-                        connection.Execute(sql, parameters);
-                        return Results.Created("Successfully created a new user.", user);
-                    }
+                    var sql = "INSERT INTO [User] VALUES (@Id, @Username, @Password)";
+                    connection.Execute(sql, parameters);
+                    return Results.Created("Successfully created a new user.", user);
+                    // Make method for this code in DbOperation class^
                 }
             });
+
+            app.UseStaticFiles();
 
             app.Run();
         }
