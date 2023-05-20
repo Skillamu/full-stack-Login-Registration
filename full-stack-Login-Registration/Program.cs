@@ -20,28 +20,25 @@ namespace full_stack_Login_Registration
                     return users;
                 }
             });
-            // Delete later^ Just for testing atm.
+            // For testing purposes, will delete later i think^.
 
-            app.MapPost("/register", async (User user) =>
+            app.MapPost("/register", (User user) =>
             {
+                if (string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.Password) || string.IsNullOrWhiteSpace(user.ConfirmPassword))
+                {
+                    // Move the logic for validation into InputValidator class^.
+                    return Results.StatusCode(403);
+                }
+
                 using (var connection = new SqlConnection(connectionString))
                 {
                     var dbOperation = new DbOperation(connection);
 
-                    var usersFromDb = await dbOperation.SelectUserWithId(user.Id);
+                    var userFromDb = dbOperation.SelectUserWithId(user.Id);
+                    if (userFromDb != null) return Results.StatusCode(409);
 
-                    if (usersFromDb != null) return Results.Conflict();
-
-                    var parameters = new
-                    {
-                        Id = user.Id,
-                        Username = user.Username,
-                        Password = user.Password
-                    };
-                    var sql = "INSERT INTO [User] VALUES (@Id, @Username, @Password)";
-                    connection.Execute(sql, parameters);
-                    return Results.Created("Successfully created a new user.", user);
-                    // Make method for this code in DbOperation class^
+                    dbOperation.InsertIntoUser(user);
+                    return Results.StatusCode(201);
                 }
             });
 

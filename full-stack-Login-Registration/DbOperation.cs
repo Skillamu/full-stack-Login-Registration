@@ -5,21 +5,32 @@ namespace full_stack_Login_Registration
 {
     public class DbOperation
     {
-        public SqlConnection _connection;
+        private SqlConnection _connection;
 
         public DbOperation(SqlConnection connection)
         {
             _connection = connection;
         }
 
-        public async Task<IEnumerable<User>?> SelectUserWithId(Guid userId)
+        public User? SelectUserWithId(Guid userId)
         {
             var parameters = new { Id = userId };
             var sql = "SELECT * FROM [User] WHERE Id = @Id";
+            var userFromDb = _connection.QuerySingleOrDefault<User>(sql, parameters);
 
-            var users = await _connection.QueryAsync<User>(sql, parameters);
+            return userFromDb is not null ? userFromDb : null;
+        }
 
-            return users.Count() > 0 ? users : null;
+        public void InsertIntoUser(User user)
+        {
+            var parameters = new
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Password = user.Password
+            };
+            var sql = "INSERT INTO [User] VALUES (@Id, @Username, @Password)";
+            _connection.Execute(sql, parameters);
         }
     }
 }
