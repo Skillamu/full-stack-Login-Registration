@@ -12,15 +12,6 @@ namespace full_stack_Login_Registration
             _connection = connection;
         }
 
-        public User? SelectUserWithId(Guid userId)
-        {
-            var parameters = new { Id = userId };
-            var sql = "SELECT * FROM [User] WHERE Id = @Id";
-            var userFromDb = _connection.QuerySingleOrDefault<User>(sql, parameters);
-
-            return userFromDb is not null ? userFromDb : null;
-        }
-
         public void InsertIntoUser(User user)
         {
             var parameters = new

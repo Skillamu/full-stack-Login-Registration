@@ -11,33 +11,33 @@ namespace full_stack_Login_Registration
             var connectionString = builder.Configuration["connectionString"];
             var app = builder.Build();
 
-            app.MapGet("/user", async () =>
+            app.MapGet("/user", () =>
             {
+                // This endpoint is for development testing only, will probaly delete later.
                 using (var connection = new SqlConnection(connectionString))
                 {
                     var sql = "SELECT * FROM [User]";
-                    var users = await connection.QueryAsync<User>(sql);
-                    return users;
+                    var usersFromDb = connection.Query<User>(sql);
+
+                    return usersFromDb.Select(
+                        user => new { user.Id, user.Username, user.Password });
                 }
             });
-            // For testing purposes, will delete later i think^.
 
             app.MapPost("/register", (User user) =>
             {
-                if (string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.Password) || string.IsNullOrWhiteSpace(user.ConfirmPassword))
+                var inputValidation = new InputValidation(user);
+
+                if (!inputValidation.HasValidInputsForRegistration())
                 {
-                    // Move the logic for validation into InputValidator class^.
                     return Results.StatusCode(403);
                 }
 
                 using (var connection = new SqlConnection(connectionString))
                 {
                     var dbOperation = new DbOperation(connection);
-
-                    var userFromDb = dbOperation.SelectUserWithId(user.Id);
-                    if (userFromDb != null) return Results.StatusCode(409);
-
                     dbOperation.InsertIntoUser(user);
+
                     return Results.StatusCode(201);
                 }
             });

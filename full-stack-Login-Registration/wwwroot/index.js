@@ -41,10 +41,10 @@ function loginView() {
     app.innerHTML = `
     <h2>Login</h2>
 
-    <label for="username">Username:</label>
+    <label for="username">Username</label>
     <input type="text" id="username"> <br>
 
-    <label for="password">Password:</label>
+    <label for="password">Password</label>
     <input type="password" id="password"> <br>
 
     <button onclick="loginBtn()">Login</button>
