@@ -26,9 +26,9 @@ namespace full_stack_Login_Registration
 
             app.MapPost("/register", (User user) =>
             {
-                var inputValidation = new InputValidation(user);
+                var registerValidation = new RegisterValidation(user);
 
-                if (!inputValidation.HasValidInputsForRegistration())
+                if (!registerValidation.HasValidInputs())
                 {
                     return Results.StatusCode(403);
                 }
@@ -36,9 +36,31 @@ namespace full_stack_Login_Registration
                 using (var connection = new SqlConnection(connectionString))
                 {
                     var dbOperation = new DbOperation(connection);
-                    dbOperation.InsertIntoUser(user);
+                    try
+                    {
+                        dbOperation.CreateUser(user);
+                        return Results.StatusCode(201);
+                    }
+                    catch
+                    {
+                        return Results.StatusCode(409);
+                    }
+                }
+            });
 
-                    return Results.StatusCode(201);
+            app.MapPost("/login", (User user) =>
+            {
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    var dbOperation = new DbOperation(connection);
+                    var loginAuthentication = new LoginAuthentication(dbOperation, user);
+
+                    if (!loginAuthentication.WasSuccessful())
+                    {
+                        return Results.StatusCode(401);
+                    }
+
+                    return Results.StatusCode(200);
                 }
             });
 

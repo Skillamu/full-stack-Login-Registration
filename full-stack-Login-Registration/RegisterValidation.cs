@@ -1,20 +1,20 @@
 ﻿namespace full_stack_Login_Registration
 {
-    public class InputValidation // Maybe creating seperate classes input validation classes for register and login if this gets messy(?).
+    public class RegisterValidation
     {
         private User _user;
 
-        public InputValidation(User user)
+        public RegisterValidation(User user)
         {
             _user = user;
         }
 
-        public bool HasValidInputsForRegistration()
+        public bool HasValidInputs()
         {
-            return !ContainsUnfilledData() && ConfirmedPasswordIsEqualToPassword();
+            return !ContainsUnfilledInputs() && ConfirmedPasswordIsEqualToPassword();
         }
 
-        private bool ContainsUnfilledData()
+        private bool ContainsUnfilledInputs()
         {
             return string.IsNullOrWhiteSpace(_user.Username) ? true :
                    string.IsNullOrWhiteSpace(_user.Password) ? true :
