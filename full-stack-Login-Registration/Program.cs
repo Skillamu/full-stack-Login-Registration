@@ -10,10 +10,10 @@ namespace full_stack_Login_Registration
             var connectionString = builder.Configuration["connectionString"];
             var app = builder.Build();
 
-            var registerEndpoint = new RegisterEndpoint(connectionString);
+            var registrationEndpoint = new RegistrationEndpoint(connectionString);
             var loginEndpoint = new LoginEndpoint(connectionString);
 
-            app.MapPost("/register", registerEndpoint.Register);
+            app.MapPost("/register", registrationEndpoint.Registration);
 
             app.MapPost("/login", loginEndpoint.Login);
 

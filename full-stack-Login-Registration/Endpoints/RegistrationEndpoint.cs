@@ -2,16 +2,16 @@
 
 namespace full_stack_Login_Registration.Endpoints
 {
-    public class RegisterEndpoint
+    public class RegistrationEndpoint
     {
         private readonly string _connectionString;
 
-        public RegisterEndpoint(string connectionString)
+        public RegistrationEndpoint(string connectionString)
         {
             _connectionString = connectionString;
         }
 
-        public IResult Register(User user)
+        public IResult Registration(User user)
         {
             using var connection = new SqlConnection(_connectionString);
             var dbOperation = new DbOperation(connection);

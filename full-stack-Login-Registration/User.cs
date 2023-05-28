@@ -10,6 +10,7 @@
 
         public User()
         {
+            Id = Guid.Empty!;
             Username = null!;
             Password = null!;
             ConfirmPassword = null!;
