@@ -2,14 +2,18 @@
 {
     public class User
     {
-        public Guid Id { get; private set; }
-        public string? Username { get; set; }
-        public string? Password { get; set; }
-        public string? ConfirmPassword { get; set; }
+        public Guid Id { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string ConfirmPassword { get; set; }
+        public byte[] Salt { get; set; }
 
         public User()
         {
-            Id = Guid.NewGuid();
+            Username = null!;
+            Password = null!;
+            ConfirmPassword = null!;
+            Salt = null!;
         }
     }
 }

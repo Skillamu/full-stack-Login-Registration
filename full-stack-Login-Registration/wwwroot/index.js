@@ -15,12 +15,13 @@ const model = {
 
 // View
 registerView();
-
 function registerView() {
     const app = document.getElementById("app");
 
     app.innerHTML = `
     <h2>Register</h2>
+
+    <button onclick="loginView()">Login page</button>
 
     <label for="username">Username</label>
     <input type="text" id="username"> <br>
