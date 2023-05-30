@@ -17,7 +17,10 @@ namespace full_stack_Login_Registration
 
             app.MapPost("/login", loginEndpoint.Login);
 
-            app.UseStaticFiles();
+            var options = new FileServerOptions();
+            options.DefaultFilesOptions.DefaultFileNames.Clear();
+            options.DefaultFilesOptions.DefaultFileNames.Add("/html/index.html");
+            app.UseFileServer(options);
 
             app.Run();
         }
