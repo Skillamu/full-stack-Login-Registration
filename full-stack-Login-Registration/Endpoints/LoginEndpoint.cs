@@ -19,7 +19,7 @@ namespace full_stack_Login_Registration.Endpoints
 
             var loggedInUser = login.AuthenticateUser();
 
-            return loggedInUser is not null ? Results.Ok(loggedInUser) : Results.StatusCode(401);
+            return loggedInUser is not null ? Results.Ok(loggedInUser.Username) : Results.StatusCode(401);
         }
     }
 }
